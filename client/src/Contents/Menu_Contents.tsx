@@ -1,5 +1,12 @@
 import { createContext, useEffect, useState } from "react";
-import { AddonCategories, Addons, Menu, MenuCategories } from "../Types/Types";
+import {
+  AddonCategories,
+  Addons,
+  Locations,
+  Menu,
+  MenuCategories,
+  MenuLocations,
+} from "../Types/Types";
 import { config } from "../config/config";
 
 interface MenuType {
@@ -7,6 +14,8 @@ interface MenuType {
   menuCategories: MenuCategories[];
   addons: Addons[];
   addonCategories: AddonCategories[];
+  locations: Locations[];
+  menuLocations: MenuLocations[];
   updateData: (value: any) => void;
   fetchData: () => void;
 }
@@ -15,6 +24,8 @@ const defaultMenu = {
   menuCategories: [],
   addons: [],
   addonCategories: [],
+  locations: [],
+  menuLocations: [],
   updateData: () => {},
   fetchData: () => {},
 };
@@ -31,8 +42,8 @@ const MenuProvider = (props: any) => {
   const fetchData = async () => {
     const response = await fetch(`${config.apiBaseUrl}/data`);
     const data = await response.json();
-    const { menus, menuCategories, addons, addonCategories } = data;
-    updateData({ ...data, menus, menuCategories, addons, addonCategories });
+    const { menus, menuCategories, addons, addonCategories,locations,menuLocations } = data;
+    updateData({ ...data, menus, menuCategories, addons, addonCategories,locations,menuLocations });
   };
 
   return (

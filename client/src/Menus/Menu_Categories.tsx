@@ -13,12 +13,11 @@ import {
 } from "@mui/material";
 import { MenuCategories } from "../Types/Types";
 import { config } from "../config/config";
+import { Link } from "react-router-dom";
 
 const Menu_Categories = () => {
   const { menuCategories, fetchData } = useContext(MenuContent);
   const [menuCat, setMenuCat] = useState<MenuCategories | null>(null);
-
-  console.log("menuc", menuCategories);
 
   //create category
 
@@ -31,6 +30,15 @@ const Menu_Categories = () => {
     });
     fetchData();
   };
+
+  //delete
+  const handleDelete = async (id: any) => {
+    const response = await fetch(`${config.apiBaseUrl}/menu_categories/${id}`, {
+      method: "DELETE",
+    });
+    fetchData();
+  };
+
   return (
     <Layout>
       <Box
@@ -59,13 +67,21 @@ const Menu_Categories = () => {
       </Box>
 
       {
-        <Stack direction="row" spacing={1}>
+        <Stack
+          sx={{ display: "flex", justifyContent: "center", mt: 4 }}
+          direction="row"
+          spacing={1}
+        >
           {menuCategories.map((item) => (
-            <Chip
-              label={item.category}
-              // onClick={}
-              // onDelete={handleDelete}
-            />
+            <Link to={`/menu_categories/${item.id}`}>
+              <Chip
+                key={item.id}
+                sx={{ cursor: "pointer" }}
+                label={item.category}
+                // onClick={}
+                onDelete={() => handleDelete(item?.id)}
+              />
+            </Link>
           ))}
         </Stack>
       }

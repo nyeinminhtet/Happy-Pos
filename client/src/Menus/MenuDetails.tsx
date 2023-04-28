@@ -31,8 +31,6 @@ const MenuDetails = () => {
     });
   };
 
-  console.log(newMenu);
-
   return (
     <Layout>
       {menu ? (

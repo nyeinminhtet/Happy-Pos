@@ -7,11 +7,13 @@ import {
 } from "react-router-dom";
 import App from "../App";
 import Menus from "../Menus/Menus";
-import Addons from "../Menus/Addons";
+import Addon from "../Menus/Addons";
 import Addon_Categories from "../Menus/Addon_Categories";
 import Setting from "../Menus/Settting";
 import Menu_Categories from "../Menus/Menu_Categories";
 import MenuDetails from "../Menus/MenuDetails";
+import MenuCategoryDetail from "../Menus/Menu_CategoryDetail";
+import Addons from "../Menus/Addons";
 
 const router = createBrowserRouter([
   {
@@ -33,6 +35,10 @@ const router = createBrowserRouter([
   {
     path: "/menu_categories",
     element: <Menu_Categories />,
+  },
+  {
+    path: "/menu_categories/:id",
+    element: <MenuCategoryDetail />,
   },
   {
     path: "/addon_categories",
