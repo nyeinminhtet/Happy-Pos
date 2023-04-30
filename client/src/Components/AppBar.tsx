@@ -66,6 +66,11 @@ const MenuAppBar = () => {
           <h2 style={{ margin: "0 auto" }}>
             {pageTitle ? pageTitle : "အဝ စားမယ် "}
           </h2>
+          <Link to="/login" style={{ textDecoration: "none" }}>
+            <Button variant="outlined" sx={{ color: "white" }}>
+              Login
+            </Button>
+          </Link>
         </Toolbar>
       </AppBar>
       <Drawer

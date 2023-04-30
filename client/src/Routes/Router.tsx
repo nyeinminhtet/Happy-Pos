@@ -14,6 +14,8 @@ import Menu_Categories from "../Menus/Menu_Categories";
 import MenuDetails from "../Menus/MenuDetails";
 import MenuCategoryDetail from "../Menus/Menu_CategoryDetail";
 import Addons from "../Menus/Addons";
+import Login from "../Menus/Login";
+import Register from "../Menus/Register";
 
 const router = createBrowserRouter([
   {
@@ -47,6 +49,14 @@ const router = createBrowserRouter([
   {
     path: "/settings",
     element: <Setting />,
+  },
+  {
+    path: "/login",
+    element: <Login />,
+  },
+  {
+    path: "/register",
+    element: <Register />,
   },
 ]);
 

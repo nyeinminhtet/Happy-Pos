@@ -136,6 +136,53 @@ app.post("/addons", async (req: Request, res: Response) => {
   }
 });
 
+//auth
+app.post("/auth/register", async (req: Request, res: Response) => {
+  try {
+    const { name, email, password } = req.body;
+    const isValid =
+      name &&
+      name.length > 0 &&
+      email &&
+      email.length > 0 &&
+      password &&
+      password.length > 0;
+    if (!isValid) return res.send({ error: "pls enter fully form" });
+    const result = await pool.query(
+      "select * from users where email=$1 and password=$2",
+      [email, password]
+    );
+    if (result.rows.length) {
+      throw new Error();
+      res.send({ message: "already exist" });
+    }
+
+    const newUser = await pool.query(
+      "insert into users (name, email, password) values($1, $2, $3) returning *",
+      [name, email, password]
+    );
+    res.send(newUser.rows);
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+app.post("/auth/login", async (req: Request, res: Response) => {
+  const { email, password } = req.body;
+  const isValid = email && email.length > 0 && password && password.length > 0;
+  if (!isValid) return res.send({ message: "emal and password are required" });
+  try {
+    const result = await pool.query(
+      "select * from users where email=$1 and password=$2",
+      [email, password]
+    );
+    if (!result.rows.length) return res.send({ error: "Bad request" });
+    res.send(result.rows);
+  } catch (err) {
+    console.error(err);
+  }
+});
+
 app.listen(port, () => {
   console.log("server is listening:", port);
 });
