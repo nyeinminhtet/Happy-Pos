@@ -16,6 +16,7 @@ interface MenuType {
   addonCategories: AddonCategories[];
   locations: Locations[];
   menuLocations: MenuLocations[];
+  accessToken: string;
   updateData: (value: any) => void;
   fetchData: () => void;
 }
@@ -25,6 +26,7 @@ const defaultMenu = {
   addons: [],
   addonCategories: [],
   locations: [],
+  accessToken: "",
   menuLocations: [],
   updateData: () => {},
   fetchData: () => {},
@@ -35,15 +37,36 @@ const MenuProvider = (props: any) => {
   const [data, updateData] = useState(defaultMenu);
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    if (data.accessToken) {
+      fetchData();
+    }
+  }, [data.accessToken]);
 
   //get all menus
   const fetchData = async () => {
-    const response = await fetch(`${config.apiBaseUrl}/data`);
-    const data = await response.json();
-    const { menus, menuCategories, addons, addonCategories,locations,menuLocations } = data;
-    updateData({ ...data, menus, menuCategories, addons, addonCategories,locations,menuLocations });
+    const response = await fetch(`${config.apiBaseUrl}/data`, {
+      headers: {
+        Authorization: `Bearer ${data.accessToken}`,
+      },
+    });
+    const responseJson = await response.json();
+    const {
+      menus,
+      menuCategories,
+      addons,
+      addonCategories,
+      locations,
+      menuLocations,
+    } = responseJson;
+    updateData({
+      ...data,
+      menus,
+      menuCategories,
+      addons,
+      addonCategories,
+      locations,
+      menuLocations,
+    });
   };
 
   return (

@@ -6,12 +6,13 @@ import Layout from "../Components/Layout";
 import { Menu } from "../Types/Types";
 import { MenuContent } from "../Contents/Menu_Contents";
 import { config } from "../config/config";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Menus = () => {
-  const { menuLocations } = useContext(MenuContent);
+  const { menuLocations, accessToken } = useContext(MenuContent);
   const [menu, setMenu] = useState<Menu | null>(null);
   const { fetchData, menus } = useContext(MenuContent);
+  const navigate = useNavigate();
 
   const query = new URLSearchParams(window.location.search);
   const locationId = query.get("locationId");
@@ -27,6 +28,12 @@ const Menus = () => {
     });
     fetchData();
   };
+
+  useEffect(() => {
+    if (!accessToken) {
+      navigate("/login");
+    }
+  }, [accessToken]);
   //delete a menu
   // const handleDelete = async(id) => {
   //   const response = await fetch(`${config.api}`)

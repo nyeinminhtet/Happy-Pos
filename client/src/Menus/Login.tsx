@@ -8,13 +8,15 @@ import {
 } from "@mui/material";
 import Layout from "../Components/Layout";
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { config } from "../config/config";
+import { MenuContent } from "../Contents/Menu_Contents";
 
 const Loggin = () => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const [user, setUser] = useState({ email: "", password: "" });
+  const { updateData, ...data } = useContext(MenuContent);
 
   //sing in
   const singIn = async () => {
@@ -26,7 +28,12 @@ const Loggin = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(user),
       });
-      navigate("/menus?locationId=2");
+      if (response.ok) {
+        const responseData = await response.json();
+        updateData({ ...data, accessToken: responseData.accessToken });
+        navigate("/menus?locationId=2");
+      }
+      setOpen(true);
     } catch (err) {
       console.log("err");
     }

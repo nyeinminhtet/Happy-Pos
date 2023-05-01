@@ -10,9 +10,11 @@ import Layout from "../Components/Layout";
 import { useContext, useEffect, useState } from "react";
 import { MenuContent } from "../Contents/Menu_Contents";
 import { Locations } from "../Types/Types";
+import { useNavigate } from "react-router-dom";
 
 const Setting = () => {
-  const { locations } = useContext(MenuContent);
+  const { locations, accessToken } = useContext(MenuContent);
+  const navigate = useNavigate();
   const [selectedLocation, setSelectedLocation] = useState<
     Locations | undefined
   >();
@@ -30,7 +32,8 @@ const Setting = () => {
         setSelectedLocation(selectedLocation);
       }
     }
-  }, [locations]);
+    if (!accessToken) return navigate("/login");
+  }, [locations, accessToken]);
 
   const handleOnChange = (e: SelectChangeEvent<number>) => {
     localStorage.setItem("locationId", String(e.target.value));
