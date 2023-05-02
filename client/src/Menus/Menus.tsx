@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import { Button, Chip, Stack } from "@mui/material";
@@ -6,16 +6,14 @@ import Layout from "../Components/Layout";
 import { Menu } from "../Types/Types";
 import { MenuContent } from "../Contents/Menu_Contents";
 import { config } from "../config/config";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Menus = () => {
-  const { menuLocations, accessToken } = useContext(MenuContent);
+  const { menuLocations } = useContext(MenuContent);
   const [menu, setMenu] = useState<Menu | null>(null);
   const { fetchData, menus } = useContext(MenuContent);
-  const navigate = useNavigate();
 
-  const query = new URLSearchParams(window.location.search);
-  const locationId = query.get("locationId");
+  const locationId = localStorage.getItem("locationId");
 
   // console.log(menuCategories);
   //create a new menu
@@ -29,11 +27,6 @@ const Menus = () => {
     fetchData();
   };
 
-  useEffect(() => {
-    if (!accessToken) {
-      navigate("/login");
-    }
-  }, [accessToken]);
   //delete a menu
   // const handleDelete = async(id) => {
   //   const response = await fetch(`${config.api}`)
@@ -49,62 +42,58 @@ const Menus = () => {
   );
 
   return (
-    <Layout>
-      {locationId ? (
-        <>
-          <Box
-            component="form"
-            sx={{
-              "& > :not(style)": { m: 1, width: "25ch" },
-              display: "flex",
-              alignItems: "center",
-              flexDirection: "column",
-              justifyContent: "center",
-            }}
-            noValidate
-            autoComplete="off"
-          >
-            <h1>Create A New Menu</h1>
-            <TextField
-              sx={{ minWidth: "400px" }}
-              id="filled-basic"
-              label="Menu Name"
-              variant="filled"
-              onChange={(e) =>
-                setMenu({
-                  name: e.target.value,
-                  price: menu?.price ? menu.price : 0,
-                })
-              }
-            />
-            <TextField
-              sx={{ minWidth: "400px" }}
-              id="filled-basic"
-              label="Price"
-              type="number"
-              variant="filled"
-              onChange={(e) =>
-                setMenu({
-                  price: parseInt(e.target.value, 10),
-                  name: menu?.name ? menu.name : "",
-                })
-              }
-            />
-            <Button variant="contained" onClick={createMenu}>
-              Create
-            </Button>
-          </Box>
-          <Stack direction="row" spacing={1}>
-            {filterMenu.map((item) => (
-              <Link key={item.id} to={`/menus/${item.id}`}>
-                <Chip label={item.name.toUpperCase()} />
-              </Link>
-            ))}
-          </Stack>
-        </>
-      ) : (
-        <h1>location id is missing</h1>
-      )}
+    <Layout title="Menus">
+      <>
+        <Box
+          component="form"
+          sx={{
+            "& > :not(style)": { m: 1, width: "25ch" },
+            display: "flex",
+            alignItems: "center",
+            flexDirection: "column",
+            justifyContent: "center",
+          }}
+          noValidate
+          autoComplete="off"
+        >
+          <h1>Create A New Menu</h1>
+          <TextField
+            sx={{ minWidth: "400px" }}
+            id="filled-basic"
+            label="Menu Name"
+            variant="filled"
+            onChange={(e) =>
+              setMenu({
+                name: e.target.value,
+                price: menu?.price ? menu.price : 0,
+              })
+            }
+          />
+          <TextField
+            sx={{ minWidth: "400px" }}
+            id="filled-basic"
+            label="Price"
+            type="number"
+            variant="filled"
+            onChange={(e) =>
+              setMenu({
+                price: parseInt(e.target.value, 10),
+                name: menu?.name ? menu.name : "",
+              })
+            }
+          />
+          <Button variant="contained" onClick={createMenu}>
+            Create
+          </Button>
+        </Box>
+        <Stack direction="row" spacing={1}>
+          {filterMenu.map((item) => (
+            <Link key={item.id} to={`/menus/${item.id}`}>
+              <Chip label={item.name.toUpperCase()} />
+            </Link>
+          ))}
+        </Stack>
+      </>
     </Layout>
   );
 };

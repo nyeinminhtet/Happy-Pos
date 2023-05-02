@@ -19,7 +19,7 @@ const Addons = () => {
   };
 
   return (
-    <Layout>
+    <Layout title="Addons">
       <Box
         component="form"
         sx={{

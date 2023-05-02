@@ -31,7 +31,7 @@ const Loggin = () => {
       if (response.ok) {
         const responseData = await response.json();
         updateData({ ...data, accessToken: responseData.accessToken });
-        navigate("/menus?locationId=2");
+        navigate("/");
       }
       setOpen(true);
     } catch (err) {
@@ -60,7 +60,7 @@ const Loggin = () => {
   );
 
   return (
-    <Layout>
+    <Layout title="Login">
       <Box
         component="form"
         sx={{
@@ -87,6 +87,11 @@ const Loggin = () => {
           id="filled-basic"
           label="Email"
           variant="filled"
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              singIn();
+            }
+          }}
           onChange={(e) => setUser({ ...user, email: e.target.value })}
         />
         <TextField
@@ -95,6 +100,11 @@ const Loggin = () => {
           label="Password"
           type="password"
           variant="filled"
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              singIn();
+            }
+          }}
           onChange={(e) => setUser({ ...user, password: e.target.value })}
         />
         <Box

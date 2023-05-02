@@ -32,7 +32,7 @@ const MenuDetails = () => {
   };
 
   return (
-    <Layout>
+    <Layout title="MenuDetails">
       {menu ? (
         <Box
           sx={{

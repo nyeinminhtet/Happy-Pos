@@ -40,7 +40,7 @@ const Menu_Categories = () => {
   };
 
   return (
-    <Layout>
+    <Layout title="Menu-Categories">
       <Box
         component="form"
         sx={{

@@ -20,7 +20,7 @@ interface MenuType {
   updateData: (value: any) => void;
   fetchData: () => void;
 }
-const defaultMenu = {
+export const defaultMenu = {
   menus: [],
   menuCategories: [],
   addons: [],
