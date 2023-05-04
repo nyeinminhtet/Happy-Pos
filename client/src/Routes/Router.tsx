@@ -84,6 +84,7 @@ const Router = () => {
         </Route>
         <Route path="/login" Component={Login} />
         <Route path="/logout" Component={Logout} />
+        <Route path="/register" Component={Register} />
       </Routes>
     </BrowserRouter>
   );

@@ -44,7 +44,7 @@ const MenuProvider = (props: any) => {
 
   //get all menus
   const fetchData = async () => {
-    const response = await fetch(`${config.apiBaseUrl}/data`, {
+    const response = await fetch(`${config.apiBaseUrl}`, {
       headers: {
         Authorization: `Bearer ${data.accessToken}`,
       },

@@ -3,11 +3,11 @@ import Layout from "../Components/Layout";
 import { MenuContent } from "../Contents/Menu_Contents";
 import { useParams } from "react-router-dom";
 import { Menu } from "../Types/Types";
-import { Box, Button, TextField } from "@mui/material";
+import { Autocomplete, Box, Button, TextField } from "@mui/material";
 import { config } from "../config/config";
 
 const MenuDetails = () => {
-  const { menus, ...data } = useContext(MenuContent);
+  const { menus, menuCategories, ...data } = useContext(MenuContent);
   const { menuId } = useParams();
   let menu: Menu | undefined;
   if (menuId) {
@@ -17,6 +17,11 @@ const MenuDetails = () => {
     name: "",
     price: 0,
   });
+
+  const mapMenuCategories = menuCategories.map((menuCategory) => ({
+    id: menuCategory.id,
+    label: menuCategory.category,
+  }));
 
   useEffect(() => {
     if (menu) setNewMenu({ name: menu?.name, price: menu?.price });
@@ -63,6 +68,16 @@ const MenuDetails = () => {
             onChange={(evt) =>
               setNewMenu({ ...newMenu, price: parseInt(evt.target.value, 10) })
             }
+          />
+          <Autocomplete
+            disablePortal
+            multiple
+            id="combo-box-demo"
+            options={mapMenuCategories}
+            sx={{ width: 300 }}
+            renderInput={(params) => (
+              <TextField {...params} label="Menu-Categories" />
+            )}
           />
           <Button variant="contained" onClick={updateMenu}>
             UPDATE
