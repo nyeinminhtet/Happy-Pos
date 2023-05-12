@@ -10,6 +10,8 @@ export const auth = express.Router();
 auth.post("/register", async (req: Request, res: Response) => {
   try {
     const { name, email, password } = req.body;
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     const isValid =
       name &&
       name.length > 0 &&
@@ -23,6 +25,7 @@ auth.post("/register", async (req: Request, res: Response) => {
       [email, password]
     );
     if (result.rows.length) res.send({ message: "User already exist" });
+
     // creat default company
     const defaultCompany = await pool.query(
       "INSERT INTO company (name) values($1) returning *",
@@ -30,9 +33,8 @@ auth.post("/register", async (req: Request, res: Response) => {
     );
     const defaultCompanyId = defaultCompany.rows[0].id;
     //create user -->(company_id)
-    const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = await pool.query(
-      "insert into users (name, email, password,companies_id) values($1, $2, $3) returning *",
+      "insert into users (name, email, password,companies_id) values($1, $2, $3, $4) returning *",
       [name, email, hashedPassword, defaultCompanyId]
     );
     //create default location--> (company_id)
@@ -68,18 +70,18 @@ auth.post("/register", async (req: Request, res: Response) => {
 
     //create menus_menu_categories
     await pool.query(
-      `insert into menus_menucategories (menu_id,menu_categories_id) values (${menuId1},${defaultmenuCategory1}),(${menuId2},${defaultmenuCategory2}) returning *`
+      `insert into menus_menucategrories (menu_id,menu_categories_id) values (${menuId1},${defaultmenuCategory1}),(${menuId2},${defaultmenuCategory2}) returning *`
     );
     //create addon_categories
     const defaultAddonCategories = await pool.query(
-      "insert into addon_categories (category_of_addon) values('drink),('size') returning *"
+      "insert into addon_categories (category_of_addon) values('drink'),('size') returning *"
     );
     const addonCategory1 = defaultAddonCategories.rows[0].id;
     const addonCategory2 = defaultAddonCategories.rows[1].id;
 
     //create addons
     await pool.query(
-      `insert into addons (name,price,addon_category_id) values('Cola',600,${addonCategory1}),('Pepsi',600,${addonCategory1}),('large',+300,${addonCategory2}) returining *`
+      `insert into addons (name,price,addon_category_id) values('Cola',600,${addonCategory1}),('Pepsi',600,${addonCategory1}),('large',300,${addonCategory2}) returning *`
     );
 
     // addon_menu

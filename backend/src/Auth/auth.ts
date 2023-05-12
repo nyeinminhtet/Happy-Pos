@@ -8,8 +8,9 @@ export const checkAuth = (req: Request, res: Response, next: NextFunction) => {
   const acessToken = authHeader && authHeader.split(" ")[1];
   if (!acessToken) return res.sendStatus(401);
   try {
-    jwt.verify(acessToken, config.jwtSecret);
-    console.log("accesstoken");
+    const user = jwt.verify(acessToken, config.jwtSecret);
+    //@ts-ignore
+    req["email"] = user.email;
     next();
   } catch (err) {
     res.sendStatus(401);

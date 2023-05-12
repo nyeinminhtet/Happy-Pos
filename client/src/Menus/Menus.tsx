@@ -1,36 +1,16 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
-import { Button, Chip, Stack } from "@mui/material";
+import { Card, CardContent, CardMedia, Stack, Typography } from "@mui/material";
 import Layout from "../Components/Layout";
-import { Menu } from "../Types/Types";
 import { MenuContent } from "../Contents/Menu_Contents";
-import { config } from "../config/config";
 import { Link } from "react-router-dom";
+import AddIcon from "@mui/icons-material/Add";
 
 const Menus = () => {
   const { menuLocations } = useContext(MenuContent);
-  const [menu, setMenu] = useState<Menu | null>(null);
   const { fetchData, menus } = useContext(MenuContent);
 
   const locationId = localStorage.getItem("locationId");
-
-  // console.log(menuCategories);
-  //create a new menu
-  const createMenu = async () => {
-    if (!menu?.name) return alert("pls enter name");
-    const response = await fetch(`${config.apiBaseUrl}/menus`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(menu),
-    });
-    fetchData();
-  };
-
-  //delete a menu
-  // const handleDelete = async(id) => {
-  //   const response = await fetch(`${config.api}`)
-  // }
 
   //loop for menuLocations
   const validMenuLocation = menuLocations
@@ -43,57 +23,69 @@ const Menus = () => {
 
   return (
     <Layout title="Menus">
-      <>
-        <Box
-          component="form"
-          sx={{
-            "& > :not(style)": { m: 1, width: "25ch" },
-            display: "flex",
-            alignItems: "center",
-            flexDirection: "column",
-            justifyContent: "center",
-          }}
-          noValidate
-          autoComplete="off"
+      <Box
+        component="form"
+        sx={{
+          "& > :not(style)": { m: 1, width: "25ch" },
+          display: "flex",
+          alignItems: "center",
+          flexDirection: "row",
+          justifyContent: "space-around",
+          mt: 3,
+          ml: 1,
+        }}
+        noValidate
+        autoComplete="off"
+      >
+        <Link
+          to={"/menus/create"}
+          style={{ textDecoration: "none", color: "black" }}
         >
-          <h1>Create A New Menu</h1>
-          <TextField
-            sx={{ minWidth: "400px" }}
-            id="filled-basic"
-            label="Menu Name"
-            variant="filled"
-            onChange={(e) =>
-              setMenu({
-                name: e.target.value,
-                price: menu?.price ? menu.price : 0,
-              })
-            }
-          />
-          <TextField
-            sx={{ minWidth: "400px" }}
-            id="filled-basic"
-            label="Price"
-            type="number"
-            variant="filled"
-            onChange={(e) =>
-              setMenu({
-                price: parseInt(e.target.value, 10),
-                name: menu?.name ? menu.name : "",
-              })
-            }
-          />
-          <Button variant="contained" onClick={createMenu}>
-            Create
-          </Button>
-        </Box>
-        <Stack direction="row" spacing={1}>
-          {filterMenu.map((item) => (
-            <Link key={item.id} to={`/menus/${item.id}`}>
-              <Chip label={item.name.toUpperCase()} />
-            </Link>
-          ))}
-        </Stack>
-      </>
+          <Box
+            sx={{
+              width: "300px",
+              height: "300px",
+              border: "2px dotted lightgray",
+              borderRadius: 2,
+              mr: 2,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              flexDirection: "column",
+              cursor: "pointer",
+              userSelect: "none",
+            }}
+          >
+            <AddIcon fontSize="large" />
+            <Typography>Add new menu</Typography>
+          </Box>
+        </Link>
+        {filterMenu.map((item) => (
+          <Link
+            key={item.id}
+            to={`/menus/${item.id}`}
+            style={{ textDecoration: "none", marginRight: "15px" }}
+          >
+            <Card sx={{ minWidth: 345 }}>
+              <CardMedia
+                sx={{ minHeight: 200 }}
+                image="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1180&q=80"
+              />
+              <CardContent>
+                <Typography
+                  gutterBottom
+                  variant="h5"
+                  component="div"
+                  sx={{ display: "flex", justifyContent: "space-between" }}
+                >
+                  {item.name}
+                  <span style={{ color: "blue" }}>{item.price}Kyat</span>
+                </Typography>
+              </CardContent>
+            </Card>
+          </Link>
+        ))}
+      </Box>
     </Layout>
   );
 };

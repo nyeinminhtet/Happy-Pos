@@ -21,6 +21,7 @@ import Register from "../Menus/Register";
 import Loggin from "../Menus/Login";
 import PrivateRoute from "./PrivateRoute";
 import Logout from "../Menus/LogOut";
+import CreateMenu from "../Menus/CreateMenu";
 
 // const router = createBrowserRouter([
 //   {
@@ -75,6 +76,7 @@ const Router = () => {
           <Route path="/" Component={App} />
           <Route path="/orders" Component={App} />
           <Route path="/menus" Component={Menus} />
+          <Route path="menus/create" Component={CreateMenu} />
           <Route path="/menus/:menuId" Component={MenuDetails} />
           <Route path="/addons" Component={Addons} />
           <Route path="/menu_categories" Component={Menu_Categories} />

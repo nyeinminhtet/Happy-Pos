@@ -1,7 +1,7 @@
 import * as dotenv from "dotenv";
 dotenv.config();
 
-import express from "express";
+import express, { Request, Response } from "express";
 import cors from "cors";
 import { menuRouter } from "./src/Routes/MenuRouter";
 import { menuCategoriesRouter } from "./src/Routes/MenuCategoriesRouter";
@@ -25,7 +25,7 @@ app.use("/addon_categories", addonCategoriesRouter);
 
 app.use("/addons", addons);
 
-app.use("auth", auth);
+app.use("/auth", auth);
 
 app.listen(port, () => {
   console.log("server is listening:", port);

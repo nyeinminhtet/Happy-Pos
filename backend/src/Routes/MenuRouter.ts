@@ -1,18 +1,42 @@
 import express, { Request, Response } from "express";
 import { checkAuth } from "../Auth/auth";
 import { pool } from "../../db/db";
+import { MenuQuaries } from "../MenuQuaries/MenuQuaries";
+import { fileUpload } from "../libs/fileUpload";
+import { config } from "../config/config";
 
 export const menuRouter = express.Router();
 
+// menuRouter.get("/:menuId", async (req: Request, res: Response) => {
+//   const menuId = req.params.menuId;
+//   const menu = await MenuQuaries.deleteMenu(menuId);
+//   res.send({ msg: "you delete this menu" });
+// });
+menuRouter.get("/:locationId", async (req: Request, res: Response) => {
+  const locationId = req.params.locationId;
+  const menu = await MenuQuaries.getMenuByLocations(locationId);
+  res.send(menu);
+});
+
 //create a menu
-menuRouter.post("/", checkAuth, async (req: Request, res: Response) => {
+menuRouter.post("/", async (req: Request, res: Response) => {
   try {
-    const { name, price } = req.body;
-    if (!name && !price) return res.send("Please Fill all Requirements");
-    const text = "INSERT INTO menus(name, price) VALUES($1, $2) RETURNING *";
-    const values = [name, price];
-    const { rows } = await pool.query(text, values);
-    res.send(rows);
+    fileUpload(req, res, async (error) => {
+      if (error) {
+        return res.sendStatus(500);
+      }
+      const [{ originalname }]: any = req.files;
+      const { name, price, locationIds } = JSON.parse(req.body["menu"]);
+      const imgUrl = `${config.spaceEndpoint}/happy-pos/jey/${originalname}`;
+      const menu = await MenuQuaries.createMenu({
+        name,
+        price,
+        imgUrl,
+        locationIds,
+      });
+      res.send(menu);
+      res.sendStatus(200);
+    });
   } catch (err) {
     console.error(err);
   }
