@@ -7,7 +7,7 @@ import { config } from "../config/config";
 
 const LocationsComp = () => {
   const accessToken = window.localStorage.getItem("accessToken");
-  const { locations, fetchData } = useContext(MenuContent);
+  const { locations, fetchData, company } = useContext(MenuContent);
   const [newLocation, setNewLocation] = useState<Locations>({
     name: "",
     address: "",
@@ -18,17 +18,23 @@ const LocationsComp = () => {
   useEffect(() => {
     setUpdateLocations(locations);
   }, [locations]);
+
   //create location
   const createLocation = async () => {
+    const isValid = newLocation.name && newLocation.address;
+    if (!isValid) return alert("Name and address are required");
+    newLocation.companyId = company?.id;
     try {
-      const response = await fetch(`${config.apiBaseUrl}/locations$`, {
+      const response = await fetch(`${config.apiBaseUrl}/locations`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
         body: JSON.stringify(newLocation),
       });
-      const data = await response.json();
-      setUpdateLocations(data);
-      console.log(data);
+      fetchData();
+      setNewLocation({ name: "", address: "" });
     } catch (err) {
       console.log(err);
     }
@@ -45,7 +51,6 @@ const LocationsComp = () => {
       oldLocation?.name !== newLocation?.name ||
       oldLocation?.address !== newLocation?.address
     ) {
-      console.log("should i update", location);
       await fetch(`${config.apiBaseUrl}/locations/${location.id}`, {
         method: "PUT",
         headers: {
@@ -56,6 +61,25 @@ const LocationsComp = () => {
       });
       fetchData();
     }
+  };
+
+  //delete location
+  const deleteLocation = async (location: Locations) => {
+    const response = await fetch(
+      `${config.apiBaseUrl}/locations/${location.id}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    if (response.ok) {
+      return fetchData();
+    }
+    alert(
+      "Cannot delete this location. Please delete menus associated with it first."
+    );
   };
 
   return (
@@ -101,6 +125,14 @@ const LocationsComp = () => {
                 onClick={() => uploadLocation(location)}
               >
                 Update
+              </Button>
+              <Button
+                variant="contained"
+                color="error"
+                sx={{ ml: 2 }}
+                onClick={() => deleteLocation(location)}
+              >
+                Delete
               </Button>
             </Box>
           );

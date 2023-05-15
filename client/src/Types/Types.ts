@@ -26,6 +26,7 @@ export interface Locations {
   id?: number;
   name: string;
   address?: string;
+  companyId?: string;
 }
 export interface MenuLocations {
   id?: number;
