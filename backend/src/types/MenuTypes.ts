@@ -2,7 +2,7 @@ export interface Menu {
   id?: string;
   name: string;
   price: number;
-  imgUrl?: string;
+  assetUrl?: string;
   locationIds: string[];
   addonCategoriesIds?: string[];
   menuCategoriesIds?: string[];
@@ -18,6 +18,7 @@ export interface LocationMenu {
 export interface CreateMenuParams {
   name: string;
   price: number;
-  imgUrl?: string;
+  assetUrl?: string;
+  description?: string;
   locationIds: string[];
 }

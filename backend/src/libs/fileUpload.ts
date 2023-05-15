@@ -4,8 +4,8 @@ import multerS3 from "multer-s3";
 import { config } from "../config/config";
 
 // Set S3 endpoint to DigitalOcean Spaces
-const s3Config = new S3Client({
-  endpoint: "https://sgp1.digitaloceanspaces.com",
+const s3 = new S3Client({
+  endpoint: config.spaceEndpoint,
   region: "sgp1",
   credentials: {
     accessKeyId: config.spaceAccessKeyId,
@@ -14,13 +14,15 @@ const s3Config = new S3Client({
 });
 
 // Change bucket property to your Space name
-export const fileUpload = multer({
+const upload = multer({
   storage: multerS3({
-    s3: s3Config,
+    s3: s3,
     bucket: "msquarefdc",
     acl: "public-read",
     key: function (request, file, cb) {
-      cb(null, "happy-pos/jey/" + file.originalname);
+      cb(null, `happy-pos/jey/${Date.now()}_${ file.originalname}`);
     },
   }),
 }).array("files", 1);
+
+export default upload;

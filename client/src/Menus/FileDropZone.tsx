@@ -25,7 +25,7 @@ const FileDropZone = ({ onFileSelected }: Props) => {
     >
       <input {...getInputProps()} />
       {isDragActive ? (
-        <p>Drop the files here ...</p>
+        <p>Selected the file</p>
       ) : (
         <p>Drag 'n' drop some files here, or click to select files</p>
       )}

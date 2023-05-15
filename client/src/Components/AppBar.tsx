@@ -22,6 +22,7 @@ import ClassIcon from "@mui/icons-material/Class";
 import CategoryIcon from "@mui/icons-material/Category";
 import { MenuContent } from "../Contents/Menu_Contents";
 import FastfoodIcon from "@mui/icons-material/Fastfood";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
 
 const sidebarMenuItems = [
   { id: 1, label: "Orders", icon: <FastfoodIcon />, route: "/orders" },
@@ -39,7 +40,13 @@ const sidebarMenuItems = [
     icon: <ClassIcon />,
     route: "/addon_categories",
   },
-  { id: 6, label: "Settings", icon: <SettingsIcon />, route: "/settings" },
+  {
+    id: 6,
+    label: "Locations",
+    icon: <LocationOnIcon />,
+    route: "/locations",
+  },
+  { id: 7, label: "Settings", icon: <SettingsIcon />, route: "/settings" },
 ];
 
 interface Props {
@@ -48,7 +55,8 @@ interface Props {
 
 const MenuAppBar = ({ title }: Props) => {
   const [showNavigation, setShowNavigation] = useState(false);
-  const { accessToken, locations } = useContext(MenuContent);
+  const { locations } = useContext(MenuContent);
+  const accessToken = window.localStorage.getItem("accessToken");
   const selectedLocationId = localStorage.getItem("locationId");
   const selectedLocation = locations.find(
     (location) => String(location.id) === selectedLocationId
@@ -93,7 +101,7 @@ const MenuAppBar = ({ title }: Props) => {
         disablePortal
       >
         <List>
-          {sidebarMenuItems.slice(0, 5).map((item) => (
+          {sidebarMenuItems.slice(0, 6).map((item) => (
             <Link
               key={item.id}
               to={item.route}

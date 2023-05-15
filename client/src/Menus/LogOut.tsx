@@ -6,6 +6,7 @@ const Logout = () => {
   const { updateData } = useContext(MenuContent);
 
   useEffect(() => {
+    window.localStorage.removeItem("accessToken");
     updateData(defaultMenu);
   }, []);
 

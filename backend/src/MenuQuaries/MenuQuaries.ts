@@ -10,10 +10,10 @@ interface MenuQuaries {
 
 export const MenuQuaries: MenuQuaries = {
   createMenu: async (createMenuParms: CreateMenuParams) => {
-    const { name, price, locationIds, imgUrl } = createMenuParms;
+    const { name, price, locationIds, assetUrl, description } = createMenuParms;
     const text =
-      "INSERT INTO menus(name, price,imgUrl) VALUES($1, $2,$3) RETURNING *";
-    const values = [name, price, imgUrl];
+      "INSERT INTO menus(name, price,acess_url,description) VALUES($1, $2,$3,$4) RETURNING *";
+    const values = [name, price, assetUrl, description];
     const { rows } = await pool.query(text, values);
     const menu = rows[0] as Menu;
     const menuId = menu.id as string;
@@ -21,7 +21,7 @@ export const MenuQuaries: MenuQuaries = {
       `insert into menu_locations (menu_id,location_id) select * from unnest ($1::int[],$2::int[])`,
       [Array(locationIds.length).fill(menuId), locationIds]
     );
-    return { id: menuId, name, price, imgUrl, locationIds };
+    return { id: menuId, name, price, locationIds };
   },
   getMenu: async (menuId: string) => {
     const menuResult = await pool.query(`select * from menus where id = $1`, [

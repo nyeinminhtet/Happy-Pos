@@ -5,19 +5,30 @@ import {
   Select,
   MenuItem,
   SelectChangeEvent,
+  TextField,
+  Button,
 } from "@mui/material";
 import Layout from "../Components/Layout";
 import { useContext, useEffect, useState } from "react";
 import { MenuContent } from "../Contents/Menu_Contents";
-import { Locations } from "../Types/Types";
+import { Company, Locations } from "../Types/Types";
+import { useNavigate } from "react-router-dom";
+import { config } from "../config/config";
 
 const Setting = () => {
-  const { locations } = useContext(MenuContent);
+  const { locations, company } = useContext(MenuContent);
   const [selectedLocation, setSelectedLocation] = useState<
     Locations | undefined
   >();
+  const [companyInfo, setCompanyInfo] = useState<Company>({
+    name: "",
+    address: "",
+  });
+  const navigate = useNavigate();
+  const accessToken = window.localStorage.getItem("accessToken");
 
   useEffect(() => {
+    if (!accessToken) return navigate("login");
     if (locations.length) {
       const selectedLocationId = localStorage.getItem("locationId");
       if (!selectedLocationId) {
@@ -30,7 +41,8 @@ const Setting = () => {
         setSelectedLocation(selectedLocation);
       }
     }
-  }, [locations]);
+    if (company) setCompanyInfo(company);
+  }, [locations, accessToken, company]);
 
   const handleOnChange = (e: SelectChangeEvent<number>) => {
     localStorage.setItem("locationId", String(e.target.value));
@@ -39,6 +51,26 @@ const Setting = () => {
     );
     setSelectedLocation(selectedLocation);
   };
+
+  //update company info
+  const updateCompany = async () => {
+    try {
+      const response = await fetch(
+        `${config.apiBaseUrl}/setting/companies/${companyInfo.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify(companyInfo),
+        }
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <Layout title="Setting">
       <Box
@@ -49,10 +81,30 @@ const Setting = () => {
           maxWidth: 400,
           m: "0 auto",
           flexDirection: "column",
-          mt: 5,
+          mt: 1,
         }}
       >
-        <h1>Choose Your Shop Location</h1>
+        <h1>Choose Your Info</h1>
+        <TextField
+          label="Name"
+          variant="outlined"
+          value={companyInfo.name}
+          sx={{ mb: 2, minWidth: 400 }}
+          onChange={(evt) => {
+            const name = evt.target.value;
+            setCompanyInfo({ ...companyInfo, name });
+          }}
+        />
+        <TextField
+          label="Address"
+          variant="outlined"
+          value={companyInfo.address}
+          sx={{ mb: 2, minWidth: 400 }}
+          onChange={(evt) => {
+            const address = evt.target.value;
+            setCompanyInfo({ ...companyInfo, address });
+          }}
+        />
         <FormControl fullWidth>
           <InputLabel id="demo-simple-select-label">Locations</InputLabel>
           <Select
@@ -71,6 +123,13 @@ const Setting = () => {
             })}
           </Select>
         </FormControl>
+        <Button
+          variant="contained"
+          sx={{ mt: 2, width: "fit-content" }}
+          onClick={updateCompany}
+        >
+          Update
+        </Button>
       </Box>
     </Layout>
   );

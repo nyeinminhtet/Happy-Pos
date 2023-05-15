@@ -5,6 +5,9 @@ export interface Basic {
 
 export interface Menu extends Basic {
   price: number;
+  locationIds: number[];
+  assetUrl?: string;
+  description: string;
 }
 
 export interface Addons extends Basic {
@@ -33,4 +36,10 @@ export interface MenuLocations {
 export interface MenuCategories {
   id?: number;
   category: string;
+}
+
+export interface Company {
+  id?: string;
+  name: string;
+  address: string;
 }

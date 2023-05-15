@@ -8,7 +8,7 @@ import AddIcon from "@mui/icons-material/Add";
 
 const Menus = () => {
   const { menuLocations } = useContext(MenuContent);
-  const { fetchData, menus } = useContext(MenuContent);
+  const { menus } = useContext(MenuContent);
 
   const locationId = localStorage.getItem("locationId");
 
@@ -24,18 +24,13 @@ const Menus = () => {
   return (
     <Layout title="Menus">
       <Box
-        component="form"
         sx={{
           "& > :not(style)": { m: 1, width: "25ch" },
           display: "flex",
-          alignItems: "center",
-          flexDirection: "row",
-          justifyContent: "space-around",
-          mt: 3,
-          ml: 1,
+
+          justifyContent: "space-evenly",
+          flexWrap: "wrap",
         }}
-        noValidate
-        autoComplete="off"
       >
         <Link
           to={"/menus/create"}
@@ -43,17 +38,17 @@ const Menus = () => {
         >
           <Box
             sx={{
-              width: "300px",
-              height: "300px",
+              width: "250px",
+              height: "250px",
               border: "2px dotted lightgray",
               borderRadius: 2,
-              mr: 2,
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
               flexDirection: "column",
               cursor: "pointer",
               userSelect: "none",
+              background: "lightblue",
             }}
           >
             <AddIcon fontSize="large" />
@@ -64,9 +59,15 @@ const Menus = () => {
           <Link
             key={item.id}
             to={`/menus/${item.id}`}
-            style={{ textDecoration: "none", marginRight: "15px" }}
+            style={{
+              textDecoration: "none",
+              marginRight: "15px",
+              // display: "flex",
+              // justifyContent: "space-between",
+              // flexWrap: "wrap",
+            }}
           >
-            <Card sx={{ minWidth: 345 }}>
+            <Card sx={{ minWidth: 250, m: 0 }}>
               <CardMedia
                 sx={{ minHeight: 200 }}
                 image="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1180&q=80"
@@ -76,10 +77,19 @@ const Menus = () => {
                   gutterBottom
                   variant="h5"
                   component="div"
-                  sx={{ display: "flex", justifyContent: "space-between" }}
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
                 >
                   {item.name}
-                  <span style={{ color: "blue" }}>{item.price}Kyat</span>
+                  <span style={{ color: "blue", fontSize: 18 }}>
+                    {item.price}Kyat
+                  </span>
+                </Typography>
+                <Typography sx={{ color: "gray" }}>
+                  {item.description}
                 </Typography>
               </CardContent>
             </Card>

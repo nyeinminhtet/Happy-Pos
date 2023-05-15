@@ -2,7 +2,7 @@ import express, { Request, Response } from "express";
 import { checkAuth } from "../Auth/auth";
 import { pool } from "../../db/db";
 import { MenuQuaries } from "../MenuQuaries/MenuQuaries";
-import { fileUpload } from "../libs/fileUpload";
+
 import { config } from "../config/config";
 
 export const menuRouter = express.Router();
@@ -20,26 +20,38 @@ menuRouter.get("/:locationId", async (req: Request, res: Response) => {
 
 //create a menu
 menuRouter.post("/", async (req: Request, res: Response) => {
-  try {
-    fileUpload(req, res, async (error) => {
-      if (error) {
-        return res.sendStatus(500);
-      }
-      const [{ originalname }]: any = req.files;
-      const { name, price, locationIds } = JSON.parse(req.body["menu"]);
-      const imgUrl = `${config.spaceEndpoint}/happy-pos/jey/${originalname}`;
-      const menu = await MenuQuaries.createMenu({
-        name,
-        price,
-        imgUrl,
-        locationIds,
-      });
-      res.send(menu);
-      res.sendStatus(200);
-    });
-  } catch (err) {
-    console.error(err);
-  }
+  const { name, price, description, assetUrl, locationIds } = req.body;
+  const isValid = name && locationIds && locationIds.length;
+  if (!isValid) return res.sendStatus(400);
+  const menu = await MenuQuaries.createMenu({
+    name,
+    price,
+    assetUrl,
+    description,
+    locationIds,
+  });
+  res.send(menu);
+  // try {
+  //   fileUpload(req, res, async (error) => {
+  //     if (error) {
+  //       return res.send(error);
+  //     }
+  //     const [{ originalname }]: any = req.files;
+  //     const { name, price, locationIds } = JSON.parse(req.body["menu"]);
+  //     const imgUrl = `${config.spaceEndpoint}/happy-pos/jey/${originalname}`;
+  //     console.log(imgUrl);
+  //     const menu = await MenuQuaries.createMenu({
+  //       name,
+  //       price,
+  //       acessUrl: imgUrl,
+  //       locationIds,
+  //     });
+  //     res.send(menu);
+  //     res.sendStatus(200);
+  //   });
+  // } catch (err) {
+  //   console.error(err);
+  // }
 });
 
 //update menu

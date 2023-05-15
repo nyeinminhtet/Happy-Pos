@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import { checkAuth } from "../Auth/auth";
 import { pool } from "../../db/db";
+import upload from "../libs/fileUpload";
 
 export const dataRouter = express.Router();
 
@@ -61,7 +62,7 @@ dataRouter.get("/", checkAuth, async (req: Request, res: Response) => {
       [addonCategoryIds]
     );
     const companyResult = await pool.query(
-      "select * from company where id = $1",
+      "select * from companies where id = $1",
       [companyId]
     );
     const company = companyResult.rows[0];
@@ -74,6 +75,21 @@ dataRouter.get("/", checkAuth, async (req: Request, res: Response) => {
       locations: locations.rows,
       menuLocations: menuLocations.rows,
       company,
+    });
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+dataRouter.post("/assets", (req: Request, res: Response) => {
+  try {
+    upload(req, res, async (error) => {
+      if (error) return console.log(error);
+      const files = req.files as Express.MulterS3.File[];
+      const file = files[0];
+      console.log("assetUrl", file);
+      const assetUrl = file.location;
+      res.send({ assetUrl });
     });
   } catch (err) {
     console.error(err);

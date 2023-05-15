@@ -2,6 +2,7 @@ import { createContext, useEffect, useState } from "react";
 import {
   AddonCategories,
   Addons,
+  Company,
   Locations,
   Menu,
   MenuCategories,
@@ -15,8 +16,8 @@ interface MenuType {
   addons: Addons[];
   addonCategories: AddonCategories[];
   locations: Locations[];
+  company: Company | null;
   menuLocations: MenuLocations[];
-  accessToken: string;
   updateData: (value: any) => void;
   fetchData: () => void;
 }
@@ -26,8 +27,8 @@ export const defaultMenu = {
   addons: [],
   addonCategories: [],
   locations: [],
-  accessToken: "",
   menuLocations: [],
+  company: null,
   updateData: () => {},
   fetchData: () => {},
 };
@@ -35,18 +36,19 @@ export const MenuContent = createContext<MenuType>(defaultMenu);
 
 const MenuProvider = (props: any) => {
   const [data, updateData] = useState(defaultMenu);
+  const accessToken = window.localStorage.getItem("accessToken");
 
   useEffect(() => {
-    if (data.accessToken) {
+    if (accessToken) {
       fetchData();
     }
-  }, [data.accessToken]);
+  }, [accessToken]);
 
   //get all menus
   const fetchData = async () => {
     const response = await fetch(`${config.apiBaseUrl}`, {
       headers: {
-        Authorization: `Bearer ${data.accessToken}`,
+        Authorization: `Bearer ${accessToken}`,
       },
     });
     const responseJson = await response.json();
@@ -57,6 +59,7 @@ const MenuProvider = (props: any) => {
       addonCategories,
       locations,
       menuLocations,
+      company,
     } = responseJson;
     updateData({
       ...data,
@@ -66,7 +69,9 @@ const MenuProvider = (props: any) => {
       addonCategories,
       locations,
       menuLocations,
+      company,
     });
+    console.log("all data", responseJson);
   };
 
   return (

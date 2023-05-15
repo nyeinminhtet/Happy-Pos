@@ -7,7 +7,7 @@ import {
   Typography,
 } from "@mui/material";
 import Layout from "../Components/Layout";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import { config } from "../config/config";
 import { MenuContent } from "../Contents/Menu_Contents";
@@ -17,6 +17,7 @@ const Loggin = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState({ email: "", password: "" });
   const { updateData, ...data } = useContext(MenuContent);
+  const accessToken = window.localStorage.getItem("acessToken");
 
   //sing in
   const singIn = async () => {
@@ -30,7 +31,8 @@ const Loggin = () => {
       });
       if (response.ok) {
         const responseData = await response.json();
-        updateData({ ...data, accessToken: responseData.accessToken });
+        //  updateData({ ...data, accessToken: responseData.accessToken });
+        window.localStorage.setItem("accessToken", responseData.accessToken);
         navigate("/");
       }
       setOpen(true);
@@ -58,7 +60,7 @@ const Loggin = () => {
       ></IconButton>
     </>
   );
-
+  if (!accessToken) return <Navigate to="/login" />;
   return (
     <Layout title="Login">
       <Box
