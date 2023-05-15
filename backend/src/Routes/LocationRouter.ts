@@ -5,13 +5,13 @@ import { pool } from "../../db/db";
 export const locationRouter = express.Router();
 
 locationRouter.post("/", checkAuth, async (req: Request, res: Response) => {
-  const { name, address } = req.body;
-  if (!name || !address) return res.sendStatus(400);
+  const { name, address, companyId } = req.body;
+  if (!name || !address || !companyId) return res.sendStatus(400);
   const newLocation = await pool.query(
-    `insert into locations (name,address) values($1,$2) returning *`,
-    [name, address]
+    `insert into locations (name,address,companies_id) values($1,$2,$3) returning *`,
+    [name, address, companyId]
   );
-  res.send(newLocation.rows);
+  res.send(newLocation.rows[0]);
 });
 
 locationRouter.put(
@@ -26,5 +26,19 @@ locationRouter.put(
       [name, address, locationId]
     );
     res.send(locationResult.rows[0]);
+  }
+);
+locationRouter.delete(
+  "/:locationId",
+  checkAuth,
+  async (req: Request, res: Response) => {
+    const locationId = req.params.locationId;
+    if (!locationId) return res.sendStatus(400);
+    try {
+      await pool.query("delete from locations where id = $1", [locationId]);
+      res.sendStatus(200);
+    } catch (err) {
+      res.sendStatus(500);
+    }
   }
 );
