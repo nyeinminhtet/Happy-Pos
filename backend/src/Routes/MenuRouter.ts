@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
 import { checkAuth } from "../Auth/auth";
-import { pool } from "../../db/db";
+import { pool } from "../db/db";
 import { MenuQuaries } from "../MenuQuaries/MenuQuaries";
 
 import { config } from "../config/config";

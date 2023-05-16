@@ -1,4 +1,4 @@
-import { pool } from "../../db/db";
+import { pool } from "../db/db";
 import { CreateMenuParams, LocationMenu, Menu } from "../types/MenuTypes";
 
 interface MenuQuaries {
