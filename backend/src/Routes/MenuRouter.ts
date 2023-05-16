@@ -31,27 +31,6 @@ menuRouter.post("/", async (req: Request, res: Response) => {
     locationIds,
   });
   res.send(menu);
-  // try {
-  //   fileUpload(req, res, async (error) => {
-  //     if (error) {
-  //       return res.send(error);
-  //     }
-  //     const [{ originalname }]: any = req.files;
-  //     const { name, price, locationIds } = JSON.parse(req.body["menu"]);
-  //     const imgUrl = `${config.spaceEndpoint}/happy-pos/jey/${originalname}`;
-  //     console.log(imgUrl);
-  //     const menu = await MenuQuaries.createMenu({
-  //       name,
-  //       price,
-  //       acessUrl: imgUrl,
-  //       locationIds,
-  //     });
-  //     res.send(menu);
-  //     res.sendStatus(200);
-  //   });
-  // } catch (err) {
-  //   console.error(err);
-  // }
 });
 
 //update menu
