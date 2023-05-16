@@ -91,7 +91,7 @@ auth.post("/register", async (req: Request, res: Response) => {
 
     res.send(newUser.rows);
   } catch (err) {
-    console.error(err);
+    console.log(err);
   }
 });
 
